@@ -1,5 +1,5 @@
 from fastapi import FastAPI, HTTPException, status
-from app.models import QueryReponse, UserQuery
+from app.models import QuickAnswer, DeepResearch, UserQuery
 from app.services import classifier, llm_client
 import uuid
 
@@ -10,19 +10,21 @@ app = FastAPI(
 )
 
 
-@app.post("/query", response_model=QueryResponse, status_code=status.HTTP_200_OK)
+@app.post(
+    "/query", response_model=QuickAnswer, status_code=status.HTTP_200_OK
+)  # what's the point setting the response model?
 async def query_endpoint(query: UserQuery):
     query_id = str(uuid.uuid4())
     classification = classifier.classify(UserQuery.query)
+    LLMClient = llm_client.LLMClient()
     if classification == "quick":
-        answer = llm_client.generate(UserQuery.query)
-        return QueryReponse(
-            query_id=query_id, classification=classification, answer=answer
-        )
+        answer = LLMClient.generate(UserQuery.query)
+        QuickAnswer.query_id = query_id
+
+        print(answer)
+        print(QuickAnswer.message_string)
 
     elif classification == "research":
-        return QueryResponse(
-            query_id=query_id, classification=classification, answer=None
-        )
+        print(DeepResearch.message_string)
     else:
         raise HTTPException(status_code=500, detail="unexpected classification result")
