@@ -26,14 +26,10 @@ class InMemoryStorage:
         # TODO:
         #   - initialize a simple internal dictionary
         #   - consider adding a 'demo_mode' flag for consistent behavior
-        demo_mode: bool
-        internal_dict: dict = {
-            "query_id": str,
-            "user_query": str,
-            "classification": str,
-        }
+        self.demo_mode: bool
+        self.internal_dict: dict
 
-    def save(self, key: str, value):
+    def save(self, key: str, value: dict):
         """
         Save arbitrary value under a string key.
 
@@ -44,6 +40,8 @@ class InMemoryStorage:
         TODO:
             - store value in internal dictionary
         """
+        if self.demo_mode:
+            self.internal_dict[key] = value
 
     def load(self, key: str):
         """
@@ -56,7 +54,8 @@ class InMemoryStorage:
             - return the value if it exists
             - return None (or raise KeyError) if it doesn’t
         """
-        pass
+        if self.demo_mode:
+            return self.internal_dict[key]
 
     def clear(self):
         """
@@ -65,7 +64,8 @@ class InMemoryStorage:
         TODO:
             - reset internal dictionary to empty
         """
-        pass
+        if self.demo_mode:
+            self.internal_dict.clear
 
 
 # --- Future Notes ---------------------------------------------------------
