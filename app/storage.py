@@ -26,7 +26,7 @@ class InMemoryStorage:
         # TODO:
         #   - initialize a simple internal dictionary
         #   - consider adding a 'demo_mode' flag for consistent behavior
-        self.demo_mode: bool
+        self.demo_mode: bool = True
         self.internal_dict: dict
 
     def save(self, key: str, value: dict):
